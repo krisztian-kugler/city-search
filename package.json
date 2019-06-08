@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "ng": "ng",
+    "setup": "npm install && cd src/api && npm install",
     "start": "concurrently \"ng serve --proxy-config proxy.conf.json\" \"cd src/api && nodemon server.js\"",
     "build": "ng build",
     "test": "ng test",
