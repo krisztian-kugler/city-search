@@ -1,10 +1,15 @@
-import { Component } from '@angular/core';
+import { Component } from "@angular/core";
+import { DataService } from "./services/data.service";
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.sass']
+  selector: "cs-root",
+  templateUrl: "./app.component.html",
+  styleUrls: ["./app.component.sass"]
 })
 export class AppComponent {
-  title = 'city-search';
+  constructor(private dataService: DataService) {}
+
+  public onSearch(): void {
+    open(`https://www.google.com/search?q=${this.dataService.selectedCity.name}&tbm=isch`);
+  }
 }

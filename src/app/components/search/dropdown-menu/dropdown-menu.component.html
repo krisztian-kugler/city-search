@@ -1,0 +1,3 @@
+<cs-dropdown-item *ngFor="let city of cities; let i = index" [city]="city" (click)="onSelect(city)"></cs-dropdown-item>
+
+<div *ngIf="!foundCities">No results for xxx</div>
