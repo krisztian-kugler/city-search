@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import City from "../models/city.model";
 import { Observable } from "rxjs";
+import City from "../models/city.model";
 
 @Injectable()
 export class DataService {
@@ -17,13 +17,22 @@ export class DataService {
     this._selectedCity = { ...city };
   }
 
-  public getCities(searchQuery: string): Observable<Object> {
-    const url: string = `/citysearch?search=${encodeURIComponent(searchQuery)}`;
-    return this.http.get(url);
+  private _cache = {};
+
+  public get cache() {
+    return { ...this._cache };
   }
 
-  public searchImages(searchQuery: string): Observable<Object> {
-    const url: string = `https://www.google.com/search?q=${searchQuery}&tbm=isch`;
+  public getCache(query: string): City[] {
+    return this._cache[query];
+  }
+
+  public setCache(params: { query: string; cities: City[] }) {
+    this._cache[params.query] = params.cities;
+  }
+
+  public getCities(searchQuery: string): Observable<Object> {
+    const url: string = `/citysearch?search=${encodeURIComponent(searchQuery)}`;
     return this.http.get(url);
   }
 }

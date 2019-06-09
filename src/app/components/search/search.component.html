@@ -1,5 +1,5 @@
 <div class="input-group">
-  <input class="search-input" type="text" placeholder="Search for cities..." [(ngModel)]="searchQuery" (input)="onInput()" #searchInput />
-  <i class="clear fas fa-times" (click)="onClear()"></i>
+  <input class="search-input" type="text" placeholder="Search for cities..." #searchInput />
+  <i *ngIf="searchQuery" class="clear fas fa-times" title="Clear" (click)="onClear()"></i>
 </div>
 <cs-dropdown-menu *ngIf="searchInput.value.length" [cities]="cities"></cs-dropdown-menu>

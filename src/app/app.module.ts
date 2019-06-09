@@ -2,6 +2,7 @@ import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 import { FormsModule } from "@angular/forms";
 import { HttpClientModule } from "@angular/common/http";
+
 import { AppRoutingModule } from "./app-routing.module";
 
 import { AppComponent } from "./app.component";
@@ -11,8 +12,10 @@ import { DropdownItemComponent } from "./components/search/dropdown-menu/dropdow
 
 import { DataService } from "./services/data.service";
 
+import { MarkerPipe } from "./pipes/marker.pipe";
+
 @NgModule({
-  declarations: [AppComponent, SearchComponent, DropdownMenuComponent, DropdownItemComponent],
+  declarations: [AppComponent, SearchComponent, DropdownMenuComponent, DropdownItemComponent, MarkerPipe],
   imports: [BrowserModule, FormsModule, HttpClientModule, AppRoutingModule],
   providers: [DataService],
   bootstrap: [AppComponent]
