@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit, Input, Output, EventEmitter, HostListener } from "@angular/core";
 import City from "src/app/models/city.model";
 import { DataService } from "src/app/services/data.service";
 
@@ -10,11 +10,21 @@ import { DataService } from "src/app/services/data.service";
 export class DropdownMenuComponent implements OnInit {
   constructor(private dataService: DataService) {}
 
+  @HostListener("focus") focusevent() {
+    console.log("focused");
+  }
+
+  @Input() public loadingData: boolean = false;
+  @Input() public searchValue: string;
+
+  @Output() selectCity = new EventEmitter<City>();
+
   @Input() public cities: City[];
   public foundCities: boolean = true;
 
   public onSelect(city: City): void {
     this.dataService.selectedCity = city;
+    this.selectCity.emit(city);
   }
 
   ngOnInit() {}

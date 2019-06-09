@@ -1,10 +1,20 @@
 import { Pipe, PipeTransform } from "@angular/core";
+import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
+import { DataService } from "../services/data.service";
 
 @Pipe({
   name: "marker"
 })
 export class MarkerPipe implements PipeTransform {
-  transform(value: any, args?: any): any {
-    return null;
+  constructor(private sanitizer: DomSanitizer, private dataService: DataService) {}
+
+  transform(value: string, filter?: string): SafeHtml {
+    if (value) return this.sanitizer.bypassSecurityTrustHtml(this.mark(value, this.dataService.searchValue));
+  }
+
+  private mark(value: string, filter: string): string {
+    const regExp: RegExp = new RegExp(`(${filter})`, "ig");
+    const marked: string = `<span style="font-weight: bold">$1</span>`;
+    return value.replace(regExp, marked);
   }
 }

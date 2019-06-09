@@ -1,3 +1,11 @@
-<cs-dropdown-item *ngFor="let city of cities; let i = index" [city]="city" (click)="onSelect(city)"></cs-dropdown-item>
+<div class="loader" *ngIf="loadingData">
+  <cs-loader></cs-loader>
+  <p>Loading...</p>
+</div>
 
-<div *ngIf="!foundCities">No results for xxx</div>
+<ng-container *ngIf="!loadingData">
+  <ng-container *ngIf="cities.length">
+    <cs-dropdown-item *ngFor="let city of cities; let i = index" [city]="city" (click)="onSelect(city)"></cs-dropdown-item>
+  </ng-container>
+  <div class="no-result" *ngIf="!cities.length">No results for '{{ searchValue }}'</div>
+</ng-container>

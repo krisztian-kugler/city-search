@@ -1,5 +1,20 @@
-<div class="input-group">
-  <input class="search-input" type="text" placeholder="Search for cities..." #searchInput />
-  <i *ngIf="searchQuery" class="clear fas fa-times" title="Clear" (click)="onClear()"></i>
+<div class="search-block">
+  <div class="input-group">
+    <input class="search-input" type="text" placeholder="Search for cities..." #searchInput [(ngModel)]="searchValue" />
+    <i *ngIf="searchValue" class="clear fas fa-times" title="Clear" (click)="clearInput()"></i>
+  </div>
+  <cs-dropdown-menu
+    *ngIf="showDropdown"
+    class="dropdown-menu"
+    [cities]="cities"
+    [loadingData]="loadingData"
+    [searchValue]="searchValue"
+    (selectCity)="onSelectCity($event)"
+    (document:click)="closeDropdown($event)"
+  ></cs-dropdown-menu>
 </div>
-<cs-dropdown-menu *ngIf="searchInput.value.length" [cities]="cities"></cs-dropdown-menu>
+
+<button class="search-button" [disabled]="dataService.disableSearch" (click)="searchPhotos()">
+  <i class="fab fa-google"></i>
+  Search Photos
+</button>

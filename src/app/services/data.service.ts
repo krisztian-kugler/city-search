@@ -1,11 +1,14 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { Observable } from "rxjs";
+import { Observable, Subject } from "rxjs";
 import City from "../models/city.model";
 
 @Injectable()
 export class DataService {
   constructor(private http: HttpClient) {}
+
+  public searchValue: string;
+  public disableSearch: boolean = true;
 
   private _selectedCity: City = null;
 
@@ -15,16 +18,17 @@ export class DataService {
 
   public set selectedCity(city: City) {
     this._selectedCity = { ...city };
+    this.disableSearch = false;
   }
 
   private _cache = {};
 
-  public get cache() {
-    return { ...this._cache };
-  }
-
   public getCache(query: string): City[] {
-    return this._cache[query];
+    if (this._cache[query]) {
+      return [...this._cache[query]];
+    } else {
+      return null;
+    }
   }
 
   public setCache(params: { query: string; cities: City[] }) {

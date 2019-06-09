@@ -3,25 +3,47 @@
   position: relative
   display: flex
 
-  .input-group
+  .search-block
     position: relative
-    flex-grow: 1
+    margin-right: 15px
 
-    .search-input
-      width: 100%
-      height: 40px
-      padding-left: 10px
-      outline: none
-      border-radius: 5px
-      border: 1px solid rgb(200, 200, 200)
-      font-family: Montserrat
-      font-size: 1em
-      font-weight: 600
+    .input-group
+      position: relative
+      flex-grow: 1
 
-    .clear
-      position: absolute
-      top: 50%
-      right: 10px
-      transform: translateY(-50%)
-      color: rgb(200, 200, 200)
-      cursor: pointer
+      .search-input
+        width: 320px
+        height: 50px
+        padding-left: 10px
+        outline: none
+        border-radius: 5px
+        border: 1px solid rgb(200, 200, 200)
+        font-family: Montserrat
+        font-size: 1em
+
+        &:focus
+          border-color: dodgerblue
+
+      .clear
+        position: absolute
+        top: 50%
+        right: 10px
+        transform: translateY(-50%)
+        color: rgb(200, 200, 200)
+        cursor: pointer
+
+  .search-button
+    padding: 10px 30px
+    border-radius: 5px
+    background-color: dodgerblue
+    color: white
+    font-family: Montserrat
+    font-size: 1em
+    border: none
+    outline: none
+    cursor: pointer
+
+    &:disabled
+      opacity: .4
+      cursor: not-allowed
+

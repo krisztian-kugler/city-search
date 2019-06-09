@@ -1,0 +1,24 @@
+\:host
+  display: block
+  width: 24px
+  height: 24px
+
+  .spinner-small 
+    width: 100%
+    height: 100%
+    border: 3px solid black
+    border-color: black black black transparent
+    border-radius: 50%
+    animation-name: spin
+    animation-duration: 500ms
+    animation-iteration-count: infinite
+    animation-timing-function: linear
+      
+@keyframes spin 
+  0% 
+    transform: rotate(0deg)
+
+  100% 
+    transform: rotate(360deg)
+        
+      

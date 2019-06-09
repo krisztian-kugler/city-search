@@ -1,7 +1,25 @@
 \:host
   position: absolute
+  z-index: 9999
   top: 100%
   left: 0
   width: 100%
   background-color: white
   box-shadow: 3px 3px 5px rgba(0, 0, 0, .33)
+  font-size: 12px
+
+  .loader
+    display: flex
+    align-items: center
+    height: 30px
+    padding-left: 10px
+
+    cs-loader
+      margin-right: 5px
+
+  .no-result
+    display: flex
+    align-items: center
+    height: 30px
+    padding-left: 10px
+    color: rgb(133, 133, 133)
