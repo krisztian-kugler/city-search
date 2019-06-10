@@ -3,8 +3,6 @@ import { BrowserModule } from "@angular/platform-browser";
 import { FormsModule } from "@angular/forms";
 import { HttpClientModule } from "@angular/common/http";
 
-import { AppRoutingModule } from "./app-routing.module";
-
 import { AppComponent } from "./app.component";
 import { SearchComponent } from "./components/search/search.component";
 import { DropdownMenuComponent } from "./components/search/dropdown-menu/dropdown-menu.component";
@@ -17,7 +15,7 @@ import { MarkerPipe } from "./pipes/marker.pipe";
 
 @NgModule({
   declarations: [AppComponent, SearchComponent, DropdownMenuComponent, DropdownItemComponent, LoaderComponent, MarkerPipe],
-  imports: [BrowserModule, FormsModule, HttpClientModule, AppRoutingModule],
+  imports: [BrowserModule, FormsModule, HttpClientModule],
   providers: [DataService],
   bootstrap: [AppComponent]
 })

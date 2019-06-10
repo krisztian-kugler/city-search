@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from "@angular/core";
+import { Component, AfterViewInit, ViewChild, ElementRef } from "@angular/core";
 import { fromEvent, Subscription } from "rxjs";
 import { map, tap, filter, debounceTime, switchMap } from "rxjs/operators";
 import { DataService } from "src/app/services/data.service";
@@ -14,29 +14,11 @@ export class SearchComponent implements AfterViewInit {
 
   public searchValue: string = "";
   public cities: City[] = [];
-  public input: Subscription;
   public showDropdown: boolean = false;
   public loadingData: boolean = true;
+  public inputStream: Subscription;
 
   @ViewChild("searchInput", { static: false }) searchInput: ElementRef<HTMLInputElement>;
-
-  public searchPhotos(): void {
-    open(`https://www.google.com/search?q=${this.dataService.selectedCity.name}&tbm=isch`);
-  }
-
-  public closeDropdown(event: PointerEvent) {
-    let element: HTMLElement = event.target as HTMLElement;
-
-    do {
-      if (!element.classList.contains("dropdown-menu")) {
-        element = element.parentElement;
-      } else {
-        return;
-      }
-    } while (element.parentElement);
-
-    this.showDropdown = false;
-  }
 
   public clearInput(): void {
     this.searchValue = "";
@@ -46,54 +28,71 @@ export class SearchComponent implements AfterViewInit {
   }
 
   public onSelectCity(city: City): void {
-    this.showDropdown = false;
     this.searchValue = city.name;
+    this.showDropdown = false;
+  }
+
+  public closeDropdown(event: PointerEvent): void {
+    let element: HTMLElement = event.target as HTMLElement;
+
+    do {
+      if (!element.classList.contains("dropdown-menu") && !element.classList.contains("search-input")) element = element.parentElement;
+      else return;
+    } while (element.parentElement);
+
+    this.showDropdown = false;
+  }
+
+  public searchPhotos(): void {
+    open(`https://www.google.com/search?q=${this.dataService.selectedCity.name}&tbm=isch`);
   }
 
   ngAfterViewInit(): void {
-    /*
-    The code below creates an observable stream from the input event on the search input field.
-    If the search value has a corresponding array of results in the cache (which resides in the data service),
-    then it uses the cached results, otherwise it initiates a request to the backend to fetch new data
-    (which is added to the cache object if the response is succesful). The caching function and the 500ms debouncer together minimizes the network traffic
-    toward the backend.
-    */
-    this.input = fromEvent<any>(this.searchInput.nativeElement, "input")
+    this.inputStream = fromEvent<any>(this.searchInput.nativeElement, "input")
       .pipe(
         map((event: any) => event.target.value),
-        tap((value: string) => {
-          this.dataService.searchValue = value;
-          if (this.dataService.getCache(value)) {
-            value ? (this.showDropdown = true) : (this.showDropdown = false);
-            this.cities = this.dataService.getCache(value);
+
+        tap((searchValue: string) => {
+          this.dataService.disableSearch = true;
+
+          if (!searchValue) {
+            this.showDropdown = false;
+          } else {
+            this.dataService.searchValue = searchValue;
+            if (this.dataService.getCache(searchValue)) {
+              this.cities = this.dataService.getCache(searchValue);
+              this.showDropdown = true;
+            }
           }
         }),
-        filter((value: string) => {
-          return !this.dataService.getCache(value);
-        }),
+
         debounceTime(500),
-        tap(value => {
-          this.loadingData = true;
-          value ? (this.showDropdown = true) : (this.showDropdown = false);
+
+        filter((searchValue: string) => {
+          if (!searchValue) return false;
+          else return true;
         }),
-        switchMap((value: string) => this.dataService.getCities(value))
+
+        filter((searchValue: string) => !this.dataService.getCache(searchValue)),
+
+        tap(() => {
+          this.loadingData = true;
+          this.showDropdown = true;
+        }),
+
+        switchMap((searchValue: string) => this.dataService.getCities(searchValue))
       )
       .subscribe(
         (cities: City[]) => {
           this.cities = cities;
-          this.dataService.setCache({
-            query: this.searchInput.nativeElement.value,
-            cities
-          });
+          this.dataService.setCache({ query: this.searchInput.nativeElement.value, cities });
           this.loadingData = false;
         },
-        (error: Error) => {
-          console.log(error);
-        }
+        (error: Error) => console.log(error)
       );
   }
 
   ngOnDestroy(): void {
-    this.input.unsubscribe();
+    this.inputStream.unsubscribe();
   }
 }

@@ -8,12 +8,12 @@ import { DataService } from "../services/data.service";
 export class MarkerPipe implements PipeTransform {
   constructor(private sanitizer: DomSanitizer, private dataService: DataService) {}
 
-  transform(value: string, filter?: string): SafeHtml {
+  transform(value: string): SafeHtml {
     if (value) return this.sanitizer.bypassSecurityTrustHtml(this.mark(value, this.dataService.searchValue));
   }
 
   private mark(value: string, filter: string): string {
-    const regExp: RegExp = new RegExp(`(${filter})`, "ig");
+    const regExp: RegExp = new RegExp(`^(${filter})`, "i");
     const marked: string = `<span style="font-weight: bold">$1</span>`;
     return value.replace(regExp, marked);
   }

@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { Observable, Subject } from "rxjs";
+import { Observable } from "rxjs";
 import City from "../models/city.model";
 
 @Injectable()
@@ -17,8 +17,13 @@ export class DataService {
   }
 
   public set selectedCity(city: City) {
-    this._selectedCity = { ...city };
-    this.disableSearch = false;
+    if (city) {
+      this._selectedCity = { ...city };
+      this.disableSearch = false;
+    } else {
+      this._selectedCity = null;
+      this.disableSearch = true;
+    }
   }
 
   private _cache = {};

@@ -1,0 +1,28 @@
+@mixin textInput($height: 50px)
+  height: $height
+  padding: 0 15px
+  outline: none
+  border-radius: 5px
+  border: none
+  font-family: Montserrat
+  font-size: 1em
+
+@mixin button($width, $background-color, $color: white)
+  width: $width
+  height: 50px
+  padding: 0 30px
+  border: none
+  border-radius: 5px
+  background-color: $background-color
+  color: $color
+  font-family: Montserrat
+  font-size: 1em
+  cursor: pointer
+  outline: none
+
+  &:disabled
+    opacity: .5
+    cursor: default
+
+  &:not(:disabled):hover
+    filter: brightness(110%)
