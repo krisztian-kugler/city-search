@@ -1,6 +1,7 @@
-import { Component, AfterViewInit, ViewChild, ElementRef } from "@angular/core";
+import { Component, AfterViewInit, ViewChild, ElementRef, OnDestroy } from "@angular/core";
 import { fromEvent, Subscription } from "rxjs";
 import { map, tap, filter, debounceTime, switchMap } from "rxjs/operators";
+import { HttpService } from "src/app/services/http.service";
 import { DataService } from "src/app/services/data.service";
 import City from "src/app/models/city.model";
 
@@ -9,11 +10,10 @@ import City from "src/app/models/city.model";
   templateUrl: "./search.component.html",
   styleUrls: ["./search.component.sass"]
 })
-export class SearchComponent implements AfterViewInit {
-  constructor(private dataService: DataService) {}
+export class SearchComponent implements AfterViewInit, OnDestroy {
+  constructor(private httpService: HttpService, private dataService: DataService) {}
 
-  public searchValue: string = "";
-  public cities: City[] = [];
+  public inputValue: string = "";
   public showDropdown: boolean = false;
   public loadingData: boolean = true;
   public inputStream: Subscription;
@@ -21,14 +21,14 @@ export class SearchComponent implements AfterViewInit {
   @ViewChild("searchInput", { static: false }) searchInput: ElementRef<HTMLInputElement>;
 
   public clearInput(): void {
-    this.searchValue = "";
+    this.inputValue = "";
     this.searchInput.nativeElement.focus();
     this.showDropdown = false;
     this.dataService.selectedCity = null;
   }
 
   public onSelectCity(city: City): void {
-    this.searchValue = city.name;
+    this.inputValue = city.name;
     this.showDropdown = false;
   }
 
@@ -52,15 +52,18 @@ export class SearchComponent implements AfterViewInit {
       .pipe(
         map((event: any) => event.target.value),
 
-        tap((searchValue: string) => {
+        tap((inputValue: string) => {
           this.dataService.disableSearch = true;
 
-          if (!searchValue) {
+          if (!inputValue) {
             this.showDropdown = false;
           } else {
-            this.dataService.searchValue = searchValue;
-            if (this.dataService.getCache(searchValue)) {
-              this.cities = this.dataService.getCache(searchValue);
+            this.dataService.inputValue = inputValue;
+            if (this.dataService.getCache(inputValue)) {
+              this.dataService.searchResponseStream.next({
+                searchValue: inputValue,
+                cities: this.dataService.getCache(inputValue)
+              });
               this.showDropdown = true;
             }
           }
@@ -68,24 +71,24 @@ export class SearchComponent implements AfterViewInit {
 
         debounceTime(500),
 
-        filter((searchValue: string) => {
-          if (!searchValue) return false;
+        filter((inputValue: string) => {
+          if (!inputValue) return false;
           else return true;
         }),
 
-        filter((searchValue: string) => !this.dataService.getCache(searchValue)),
+        filter((inputValue: string) => !this.dataService.getCache(inputValue)),
 
         tap(() => {
           this.loadingData = true;
           this.showDropdown = true;
         }),
 
-        switchMap((searchValue: string) => this.dataService.getCities(searchValue))
+        switchMap((inputValue: string) => this.dataService.getCities(inputValue))
       )
       .subscribe(
-        (cities: City[]) => {
-          this.cities = cities;
-          this.dataService.setCache({ query: this.searchInput.nativeElement.value, cities });
+        (response: { searchValue: string; cities: City[] }) => {
+          this.dataService.searchResponseStream.next(response);
+          this.dataService.setCache({ query: this.searchInput.nativeElement.value, cities: response.cities });
           this.loadingData = false;
         },
         (error: Error) => console.log(error)

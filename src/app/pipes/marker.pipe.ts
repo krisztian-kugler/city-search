@@ -2,14 +2,12 @@ import { Pipe, PipeTransform } from "@angular/core";
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import { DataService } from "../services/data.service";
 
-@Pipe({
-  name: "marker"
-})
+@Pipe({ name: "marker" })
 export class MarkerPipe implements PipeTransform {
   constructor(private sanitizer: DomSanitizer, private dataService: DataService) {}
 
-  transform(value: string): SafeHtml {
-    if (value) return this.sanitizer.bypassSecurityTrustHtml(this.mark(value, this.dataService.searchValue));
+  public transform(value: string): SafeHtml {
+    if (value) return this.sanitizer.bypassSecurityTrustHtml(this.mark(value, this.dataService.inputValue));
   }
 
   private mark(value: string, filter: string): string {

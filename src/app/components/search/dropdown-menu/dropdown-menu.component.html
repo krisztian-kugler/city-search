@@ -5,7 +5,7 @@
 
 <ng-container *ngIf="!loadingData">
   <ng-container *ngIf="cities.length">
-    <cs-dropdown-item *ngFor="let city of cities; let i = index" [city]="city" (click)="onSelect(city)"></cs-dropdown-item>
+    <cs-dropdown-item *ngFor="let city of cities" [city]="city" (click)="onSelect(city)"></cs-dropdown-item>
   </ng-container>
   <div class="no-result" *ngIf="!cities.length">No results for '{{ searchValue }}'</div>
 </ng-container>

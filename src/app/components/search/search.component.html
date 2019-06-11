@@ -1,14 +1,12 @@
 <div class="search-block">
   <div class="search-input-wrapper">
-    <input class="search-input" type="text" placeholder="Search for cities" [(ngModel)]="searchValue" #searchInput />
-    <i *ngIf="searchValue" class="clear fas fa-times" title="Clear" (click)="clearInput()"></i>
+    <input class="search-input" type="text" placeholder="Search for cities" [(ngModel)]="inputValue" #searchInput />
+    <i *ngIf="inputValue" class="clear fas fa-times" title="Clear" (click)="clearInput()"></i>
   </div>
   <cs-dropdown-menu
     *ngIf="showDropdown"
     class="dropdown-menu"
-    [cities]="cities"
     [loadingData]="loadingData"
-    [searchValue]="searchValue"
     (selectCity)="onSelectCity($event)"
     (document:pointerdown)="closeDropdown($event)"
   ></cs-dropdown-menu>

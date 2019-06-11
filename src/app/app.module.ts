@@ -9,6 +9,7 @@ import { DropdownMenuComponent } from "./components/search/dropdown-menu/dropdow
 import { DropdownItemComponent } from "./components/search/dropdown-menu/dropdown-item/dropdown-item.component";
 import { LoaderComponent } from "./components/search/dropdown-menu/loader/loader.component";
 
+import { HttpService } from "./services/http.service";
 import { DataService } from "./services/data.service";
 
 import { MarkerPipe } from "./pipes/marker.pipe";
@@ -16,7 +17,7 @@ import { MarkerPipe } from "./pipes/marker.pipe";
 @NgModule({
   declarations: [AppComponent, SearchComponent, DropdownMenuComponent, DropdownItemComponent, LoaderComponent, MarkerPipe],
   imports: [BrowserModule, FormsModule, HttpClientModule],
-  providers: [DataService],
+  providers: [HttpService, DataService],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

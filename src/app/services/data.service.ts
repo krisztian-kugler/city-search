@@ -1,14 +1,17 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { Observable } from "rxjs";
+import { Observable, BehaviorSubject } from "rxjs";
 import City from "../models/city.model";
+import SearchResponse from "../models/search-response.model";
 
 @Injectable()
 export class DataService {
   constructor(private http: HttpClient) {}
 
-  public searchValue: string;
+  public inputValue: string;
   public disableSearch: boolean = true;
+  public searchResponse: { searchValue: string; cities: City[] };
+  public searchResponseStream = new BehaviorSubject<SearchResponse>(null);
 
   private _selectedCity: City = null;
 
@@ -37,7 +40,7 @@ export class DataService {
   }
 
   public setCache(params: { query: string; cities: City[] }) {
-    this._cache[params.query] = params.cities;
+    this._cache[params.query] = [...params.cities];
   }
 
   public getCities(searchQuery: string): Observable<Object> {
