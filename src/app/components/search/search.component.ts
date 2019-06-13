@@ -1,9 +1,9 @@
 import { Component, AfterViewInit, ViewChild, ElementRef, OnDestroy } from "@angular/core";
 import { fromEvent, Subscription } from "rxjs";
 import { map, tap, filter, debounceTime, switchMap } from "rxjs/operators";
-import { HttpService } from "src/app/services/http.service";
 import { DataService } from "src/app/services/data.service";
 import City from "src/app/models/city.model";
+import SearchResponse from "src/app/models/search-response.model";
 
 @Component({
   selector: "cs-search",
@@ -11,7 +11,7 @@ import City from "src/app/models/city.model";
   styleUrls: ["./search.component.sass"]
 })
 export class SearchComponent implements AfterViewInit, OnDestroy {
-  constructor(private httpService: HttpService, private dataService: DataService) {}
+  constructor(private dataService: DataService) {}
 
   public inputValue: string = "";
   public showDropdown: boolean = false;
@@ -61,6 +61,7 @@ export class SearchComponent implements AfterViewInit, OnDestroy {
             this.dataService.inputValue = inputValue;
             if (this.dataService.getCache(inputValue)) {
               this.dataService.searchResponseStream.next({
+                status: "ok",
                 searchValue: inputValue,
                 cities: this.dataService.getCache(inputValue)
               });
@@ -86,12 +87,19 @@ export class SearchComponent implements AfterViewInit, OnDestroy {
         switchMap((inputValue: string) => this.dataService.getCities(inputValue))
       )
       .subscribe(
-        (response: { searchValue: string; cities: City[] }) => {
+        (response: SearchResponse) => {
           this.dataService.searchResponseStream.next(response);
           this.dataService.setCache({ query: this.searchInput.nativeElement.value, cities: response.cities });
           this.loadingData = false;
         },
-        (error: Error) => console.log(error)
+        () => {
+          this.dataService.searchResponseStream.next({
+            status: "error",
+            searchValue: this.searchInput.nativeElement.value,
+            cities: null
+          });
+          this.loadingData = false;
+        }
       );
   }
 

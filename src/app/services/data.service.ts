@@ -10,10 +10,10 @@ export class DataService {
 
   public inputValue: string;
   public disableSearch: boolean = true;
-  public searchResponse: { searchValue: string; cities: City[] };
+  public searchResponse: SearchResponse;
   public searchResponseStream = new BehaviorSubject<SearchResponse>(null);
 
-  private _selectedCity: City = null;
+  private _selectedCity: City;
 
   public get selectedCity(): City {
     return { ...this._selectedCity };
@@ -43,8 +43,8 @@ export class DataService {
     this._cache[params.query] = [...params.cities];
   }
 
-  public getCities(searchQuery: string): Observable<Object> {
-    const url: string = `/citysearch?search=${encodeURIComponent(searchQuery)}`;
+  public getCities(searchValue: string): Observable<Object> {
+    const url: string = `/citysearch?search=${encodeURIComponent(searchValue)}`;
     return this.http.get(url);
   }
 }

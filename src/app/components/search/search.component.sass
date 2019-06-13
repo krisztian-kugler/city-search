@@ -1,7 +1,7 @@
+@import "variables"
 @import "mixins"
 
 \:host
-  position: relative
   display: flex
 
   .search-block
@@ -24,7 +24,7 @@
         cursor: pointer
 
   .search-button
-    @include button(120px, #3db766, white)
+    @include button(120px, $button-bgcolor, white)
 
 @media (max-width: 484px)
 

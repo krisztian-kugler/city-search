@@ -9,6 +9,7 @@ const app: Application = express();
 
 app.get("/citysearch", (req: Request, res: Response) => {
   const searchResponse: SearchResponse = {
+    status: "ok",
     searchValue: req.query.search,
     cities: searchCities(cities as City[], "name", req.query.search)
   };

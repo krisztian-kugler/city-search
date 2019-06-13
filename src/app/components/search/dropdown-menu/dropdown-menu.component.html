@@ -4,8 +4,12 @@
 </div>
 
 <ng-container *ngIf="!loadingData">
-  <ng-container *ngIf="cities.length">
+  <ng-container *ngIf="status === 'ok' && cities?.length">
     <cs-dropdown-item *ngFor="let city of cities" [city]="city" (click)="onSelect(city)"></cs-dropdown-item>
   </ng-container>
-  <div class="no-result" *ngIf="!cities.length">No results for '{{ searchValue }}'</div>
+  <div class="no-result" *ngIf="status === 'ok' && !cities?.length">No results for '{{ searchValue }}'</div>
+  <div class="error" *ngIf="status === 'error'">
+    <i class="plug fas fa-plug"></i>
+    Network error, please try again later!
+  </div>
 </ng-container>

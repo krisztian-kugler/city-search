@@ -10,7 +10,7 @@ export class MarkerPipe implements PipeTransform {
     if (value) return this.sanitizer.bypassSecurityTrustHtml(this.mark(value, this.dataService.inputValue));
   }
 
-  private mark(value: string, filter: string): string {
+  public mark(value: string, filter: string): string {
     const regExp: RegExp = new RegExp(`^(${filter})`, "i");
     const marked: string = `<span style="font-weight: bold">$1</span>`;
     return value.replace(regExp, marked);

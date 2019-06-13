@@ -1,3 +1,5 @@
+@import "variables"
+
 \:host
   position: absolute
   z-index: 9999
@@ -6,21 +8,25 @@
   border-radius: 5px
   background-color: white
   box-shadow: 3px 3px 5px rgba(0, 0, 0, .33)
-  font-size: 12px
+  font-size: .75em
 
-  .loader
+  .loader, .no-result, .error
     display: flex
     align-items: center
     height: 35px
     padding-left: 15px
+
+  .loader
     color: black
 
     cs-loader
       margin-right: 10px
 
   .no-result
-    display: flex
-    align-items: center
-    height: 35px
-    padding-left: 15px
     color: rgb(133, 133, 133)
+
+  .error
+    color: $error-color
+
+    .plug
+      margin-right: 10px

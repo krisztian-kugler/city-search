@@ -12,6 +12,7 @@ import SearchResponse from "src/app/models/search-response.model";
 export class DropdownMenuComponent implements OnInit, OnDestroy {
   constructor(private dataService: DataService) {}
 
+  public status: "ok" | "error";
   public searchValue: string;
   public cities: City[];
   private searchResponseStream: Subscription;
@@ -28,6 +29,7 @@ export class DropdownMenuComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.searchResponseStream = this.dataService.searchResponseStream.subscribe((searchResponse: SearchResponse) => {
       if (searchResponse) {
+        this.status = searchResponse.status;
         this.searchValue = searchResponse.searchValue;
         this.cities = searchResponse.cities;
       }
